@@ -1,53 +1,33 @@
-# Meta video ad — draft
+# Meta founder video campaign
 
-## Primary version
+Campaign: Maracuya Labs | AI intro bookings | EU-US-CA
 
 **Primary text**
 
-Need help putting AI to work in your business?
+Dream it. Let’s build it.
 
-From customer support and everyday admin to custom software, Maracuya Labs helps you find the right opportunities and turn them into tools your team can actually use.
+A better business. A brand-new idea. A little more room to dream.
 
-Tell us where you need a hand, then start with a free 15-minute conversation.
+We help businesses put AI to work: customer support, smoother internal processes, and custom software built around your team.
 
-**Headline:** Less busywork. More business.
+Bring us the thing you wish existed. Tell us a little about your idea, then book a free 15-minute introduction with Ilai.
 
-**Description:** Practical AI. Built around your business.
+**Headline:** Your next big idea starts here
+
+**Description:** Practical AI and custom software. Free 15-minute intro.
 
 **CTA:** Learn more
 
 **Destination:** https://maracuyalabs.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=ai_implementation&utm_content=founder_video
 
-## More direct alternative
+**Creative:** Founder video from Documents, adapted to 1080 × 1920 with branded framing and captions. Export: `artifacts/meta/maracuya-founder-vertical.mp4` (local, excluded from Git). No synthetic spokesperson.
 
-**Primary text**
+**Budget:** €50/day average campaign budget.
 
-Your team has better things to do than repeat the same tasks all day.
+**Audience:** Europe, United States and Canada. Facebook and Instagram.
 
-We help businesses use AI to answer customer questions, improve internal processes and build custom tools. We also help your people learn how to use them.
+**Conversion:** Website, dedicated pixel 1705221900551937, standard Schedule event after a confirmed Cal.com booking, subject to measurement consent. A completed enquiry alone is not a conversion.
 
-What could that look like for your business? Tell us a little about your team and let’s talk.
+## Launch state
 
-**Headline:** Find your business’s next AI opportunity
-
-**Description:** Start with a free 15-minute intro.
-
-**CTA:** Learn more
-
-## Custom software angle
-
-**Primary text**
-
-Have a workflow that off-the-shelf software never quite fits?
-
-We build custom tools around the way your business works, with AI where it adds value. Tell us what you want to build and we’ll explore the next step together.
-
-**Headline:** Your workflow. Your own software.
-
-**Description:** Custom tools from Maracuya Labs.
-
-**CTA:** Learn more
-
-## Launch status
-
-Draft copy only. No Meta campaign has been created or published. The video asset, ad account, audience and spend were not supplied. No invented reviews, customer counts or promised outcomes are used. The funnel currently accepts enquiries; connect the real calendar link before promoting instant scheduling. Add verified testimonials when available.
+Campaign, ad set and ad are being configured in Meta. Do not assume delivery until publication is verified. No invented testimonials, customer counts or guaranteed outcomes are used.

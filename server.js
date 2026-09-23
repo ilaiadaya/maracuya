@@ -23,6 +23,9 @@ const assets = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
+  ['/booking.js', ['booking.js', 'text/javascript; charset=utf-8']],
+  ['/tracking.js', ['tracking.js', 'text/javascript; charset=utf-8']],
+  ['/work', ['work.html', 'text/html; charset=utf-8']],
   ['/favicon.svg', ['favicon.svg', 'image/svg+xml']],
   ['/privacy', ['privacy.html', 'text/html; charset=utf-8']],
 ]);
@@ -30,7 +33,7 @@ const commonHeaders = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'X-Frame-Options': 'DENY',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src https://cal.com https://calendly.com https://calendar.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' https://app.cal.com https://connect.facebook.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://app.cal.com; frame-src https://app.cal.com https://cal.com https://calendly.com https://calendar.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
 };
 function reply(res, status, data) {
   res.writeHead(status, { ...commonHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -46,7 +49,7 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (req.method === 'GET' && url.pathname === '/health') return reply(res, 200, { ok: true });
-    if (req.method === 'GET' && url.pathname === '/api/config') return reply(res, 200, { bookingUrl });
+    if (req.method === 'GET' && url.pathname === '/api/config') return reply(res, 200, { bookingUrl, metaPixelId: /^\d+$/.test(process.env.META_PIXEL_ID || '') ? process.env.META_PIXEL_ID : '' });
     if (req.method === 'GET' && url.pathname === '/api/leads') {
       if (!authorized(req)) return reply(res, 401, { error: 'Unauthorized' });
       res.writeHead(200, { ...commonHeaders, 'Content-Type': 'application/x-ndjson', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="maracuya-enquiries.ndjson"' });
@@ -92,6 +95,10 @@ const server = http.createServer(async (req, res) => {
       const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, notes: text(body.notes, 2000), consent: true, attribution };
       appendFileSync(leadsFile, JSON.stringify(lead) + '\n', { mode: 0o600, flush: true });
       return reply(res, 201, { ok: true, id: lead.id });
+    }
+    if (['GET', 'HEAD'].includes(req.method) && /^\/work-images\/[a-z0-9-]+\.webp$/.test(url.pathname) && existsSync(join(root, 'public', url.pathname))) {
+      res.writeHead(200, { ...commonHeaders, 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=86400' });
+      return res.end(req.method === 'HEAD' ? undefined : readFileSync(join(root, 'public', url.pathname)));
     }
     if (['GET', 'HEAD'].includes(req.method) && assets.has(url.pathname)) {
       const [file, type] = assets.get(url.pathname);

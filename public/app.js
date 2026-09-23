@@ -91,7 +91,11 @@ form.addEventListener('submit', async event => {
       const link = document.querySelector('#booking-link');
       link.href = url.href;
       link.hidden = false;
-      if (url.hostname !== 'calendar.app.google') {
+      if (url.hostname === 'cal.com' && url.pathname === '/ilai-3co4kt/maracuyalabs') {
+        window.MaracuyaCalendar.mount({ name: data.get('name'), email: data.get('email') });
+        document.querySelector('.hero').classList.add('booking-open');
+        link.firstChild.textContent = 'Open booking in a new tab ';
+      } else if (url.hostname !== 'calendar.app.google') {
         const frame = document.createElement('iframe');
         frame.className = 'scheduler-frame';
         frame.title = 'Book your 15-minute introductory call';
