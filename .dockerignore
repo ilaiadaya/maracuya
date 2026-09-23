@@ -1,2 +1,7 @@
 .git
 .DS_Store
+.env
+.data
+artifacts
+node_modules
+test
