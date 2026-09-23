@@ -20,14 +20,16 @@ Bring us the thing you wish existed. Tell us a little about your idea, then book
 
 **Destination:** https://maracuyalabs.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=ai_implementation&utm_content=founder_video
 
-**Creative:** Founder video from Documents, adapted to 1080 × 1920 with branded framing and captions. Export: `artifacts/meta/maracuya-founder-vertical.mp4` (local, excluded from Git). No synthetic spokesperson.
+**Creative:** Founder video from Documents, adapted to 1080 × 1920 with branded framing and captions. Export: `artifacts/meta/maracuya-founder-safe.mp4` (local, excluded from Git). No synthetic spokesperson.
 
 **Budget:** €50/day average campaign budget.
 
-**Audience:** Europe, United States and Canada. Facebook and Instagram.
+**Audience:** EU27 plus the United Kingdom, Norway, Switzerland and Iceland; United States and Canada (33 countries). Facebook and Instagram only.
 
 **Conversion:** Website, dedicated pixel 1705221900551937, standard Schedule event after a confirmed Cal.com booking, subject to measurement consent. A completed enquiry alone is not a conversion.
 
 ## Launch state
 
-Campaign, ad set and ad are being configured in Meta. Do not assume delivery until publication is verified. No invented testimonials, customer counts or guaranteed outcomes are used.
+Campaign, ad set and video ad are saved as drafts in Meta. Campaign ID: `120250906197970219`; ad set: `120250906197980219`; ad: `120250906197960219`. Publication is waiting for the existing Facebook Page / Instagram identity selection. The user requested an existing Page; no new Page was created. Do not assume delivery until publication is verified. No invented testimonials, customer counts or guaranteed outcomes are used.
+
+The live pixel sent a consented PageView to Meta on September 23. Schedule filtering and deduplication passed isolated tests without sending fake bookings to Meta. Meta may still show no Schedule activity until a real consented booking is completed.
