@@ -90,3 +90,14 @@ CTA: Book now → https://maracuyalabs.com/payments/book?utm_source=meta&utm_med
 Native form completion is a lead, not a Schedule conversion. Never fire a completed-booking event for form completion alone. The completion button opens /payments/book, a calendar-only page that preserves consent-gated Schedule measurement without repeating the questionnaire.
 
 WhatsApp follow-up is deferred until a business number, connected account, response owner and consent wording are established. No invented automated responses or unconnected WhatsApp button.
+
+## Saved Meta state — 25 September, publication unfinished
+
+- Original AI campaign 120250906197970219 and original ad set 120250906197980219 showed Active after fresh load. Original founder ad 120250906197960219 previously confirmed Active. No rebuild or restart was needed based on observed status.
+- Billing showed two failed €2 attempts followed by a successful €2.05 payment, current €0.99 balance and “No payment due at this time.” Account daily spending limit €40; campaign budget stays €50/day shared.
+- New payments ad set: 120250928309120219, name “Payments | Europe + US + Canada | 25 Sep 20:00”. Verified Website / Maximise number of leads / Schedule / dataset 1705221900551937; 25 September 2026, 20:00 GMT+2; FB and IG only; same 33 countries. Still a draft: start time alone does not schedule delivery before publication.
+- New payments ad: 120250928309130219. Name saved “Payments poster | Get payments working”; destination https://maracuyalabs.com/payments. Browser add-on None verified after removing empty instant-form selection. UTM entry must be rechecked; a fresh editor previously showed it empty.
+- Extra automatically generated draft ad 120250928309320219 was discarded. No unrelated Traffic drafts were published.
+- Poster successfully uploaded to Meta media library as payments-poster.png, 1086 × 1448. Selected in image creative wizard; sources/extensions all off; crop ratios left Original. Text, final preview and publication are NOT complete. Editor repeatedly timed out, including after reload. Reopen the creative wizard, select the uploaded poster, complete the approved copy above, disable unwanted enhancements, verify settings and publish only this ad/ad set. Confirm Scheduled or In review plus the future start, not merely a draft toggle.
+- Native form copy is prepared in this document, but no finished native form or native-form ad was created in Meta yet. Build as Higher intent, link privacy notice, complete-to-book CTA on /payments/book; keep lead vs booking reporting distinct.
+- Current site commit ebfb8f7; production /payments, /payments/review and /payments/book verified. All changes committed; no new production appointment or synthetic Schedule event sent.
