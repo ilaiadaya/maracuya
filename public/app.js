@@ -1,3 +1,4 @@
+const paymentFunnel = document.body.dataset.funnel === 'payments';
 const form = document.querySelector('#lead-form');
 const panels = [...document.querySelectorAll('.form-step')];
 const steps = [...document.querySelectorAll('.stepper li')];
@@ -12,7 +13,7 @@ let submissionId = crypto.randomUUID();
 const params = new URLSearchParams(location.search);
 const attribution = Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].filter(key => params.has(key)).map(key => [key, params.get(key).slice(0, 200)]));
 let bookingUrl = '';
-const configReady = fetch('/api/config').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(config => { bookingUrl = config.bookingUrl; }).catch(() => {});
+const configReady = fetch('/api/config').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(config => { bookingUrl = paymentFunnel ? 'https://cal.com/ilai-3co4kt/maracuya-payments' : config.bookingUrl; }).catch(() => {});
 function showError(message, focus) {
   error.textContent = message;
   error.hidden = false;
@@ -44,7 +45,7 @@ otherCheck.addEventListener('change', () => {
 });
 form.addEventListener('input', () => { error.hidden = true; });
 back.addEventListener('click', () => { if (!busy) showStep(Math.max(0, step - 1)); });
-document.querySelector('#custom-cta').addEventListener('click', () => {
+document.querySelector('#custom-cta')?.addEventListener('click', () => {
   if (form.hidden || busy) { card.scrollIntoView({ behavior: 'smooth' }); return; }
   form.querySelector('input[value="Custom tools & software"]').checked = true;
   showStep(0);
@@ -58,7 +59,7 @@ form.addEventListener('submit', async event => {
     if (otherCheck.checked && !other.value.trim()) return showError('Tell us a little about what you have in mind.', other);
   }
   if (step === 1 && !data.get('size')) return showError('Choose your company size to continue.', form.querySelector('[name=size]'));
-  if (step === 2 && !data.get('budget')) return showError('Choose a budget, or select “Help me scope it.”', form.querySelector('[name=budget]'));
+  if (step === 2 && !data.get('budget')) return showError(paymentFunnel ? 'Choose how you’d like to work together.' : 'Choose a budget, or select “Help me scope it.”', form.querySelector('[name=budget]'));
   if (step < 3) return showStep(step + 1);
   for (const input of panels[3].querySelectorAll('[required]')) {
     if (!input.checkValidity() || (input.type !== 'checkbox' && !input.value.trim())) {
@@ -72,7 +73,7 @@ form.addEventListener('submit', async event => {
   try {
     const response = await fetch('/api/leads', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ submissionId, services: data.getAll('services'), other: data.get('other'), size: data.get('size'), budget: data.get('budget'), name: data.get('name'), email: data.get('email'), company: data.get('company'), notes: data.get('notes'), website: data.get('website'), consent: data.get('consent') === 'on', attribution }),
+      body: JSON.stringify({ funnel: paymentFunnel ? 'payments' : 'ai', landingPath: location.pathname, submissionId, services: data.getAll('services'), other: data.get('other'), size: data.get('size'), budget: data.get('budget'), name: data.get('name'), email: data.get('email'), company: data.get('company'), notes: data.get('notes'), website: data.get('website'), consent: data.get('consent') === 'on', attribution }),
       signal: AbortSignal.timeout(20000),
     });
     const result = await response.json();
@@ -122,3 +123,5 @@ form.addEventListener('submit', async event => {
   }
 });
 showStep(0, false);
+
+if (document.body.dataset.interest) { const choice = [...form.querySelectorAll('[name=services]')].find(input => input.value === document.body.dataset.interest); if (choice) choice.checked = true; }

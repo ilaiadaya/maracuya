@@ -1,4 +1,6 @@
 (() => {
+  const eventId = Number(document.body.dataset.calEvent || 7193637);
+  const calLink = document.body.dataset.calLink || 'ilai-3co4kt/maracuyalabs';
   let mounted = false;
   window.MaracuyaCalendar = {
     mount({ name = '', email = '' } = {}) {
@@ -12,9 +14,9 @@
       const cal = window.Cal.ns.maracuyalabs;
       cal('on', { action: 'bookingSuccessfulV2', callback: event => {
         const data = event.detail?.data;
-        if (data?.eventTypeId !== 7193637 || !data.uid) return;
+        if (data?.eventTypeId !== eventId || !data.uid) return;
         const accepted = data.status?.toUpperCase() === 'ACCEPTED' && !data.paymentRequired;
-        document.querySelector('#booking-title').textContent = accepted ? 'A little time for your next big idea.' : 'Your booking request is in.';
+        document.querySelector('#booking-title').textContent = accepted ? 'Your introductory call is booked.' : 'Your booking request is in.';
         document.querySelector('#booking-message').textContent = accepted ? 'Your introductory call is booked. Look out for your calendar invitation and Google Meet link.' : 'Please check your email for confirmation from Cal.com.';
         document.querySelector('#booking-footnote').textContent = accepted ? 'We look forward to meeting you.' : 'Your appointment is awaiting confirmation.';
         if (accepted) window.MaracuyaTracking?.booked(data);
@@ -22,7 +24,7 @@
       cal('on', { action: 'linkFailed', callback: () => {
         document.querySelector('#booking-footnote').textContent = 'The calendar could not load here. Use “Open booking in a new tab” below.';
       }});
-      cal('inline', { elementOrSelector: '#scheduler', calLink: 'ilai-3co4kt/maracuyalabs', config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true', theme: 'light', name, email } });
+      cal('inline', { elementOrSelector: '#scheduler', calLink, config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true', theme: 'light', name, email } });
       cal('ui', { hideEventTypeDetails: false, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#ee5633' } } });
     }
   };

@@ -51,3 +51,19 @@ test('lead capture validates, deduplicates, persists across restart, and protect
     assert.equal((await post(lead)).status, 429);
   } finally { if (child && child.exitCode === null) await stop(); await rm(dataDir, { recursive: true, force: true }); }
 });
+
+test('payments intake keeps its service and commercial model separate from AI enquiries', async () => {
+  const dir=await mkdtemp(join(tmpdir(),'maracuya-payments-')); const port=30000+Math.floor(Math.random()*10000);
+  const child=spawn(process.execPath,['server.js'],{env:{...process.env,PORT:String(port),DATA_DIR:dir},stdio:['ignore','pipe','pipe']});
+  await once(child.stdout,'data');
+  const lead={submissionId:randomUUID(),funnel:'payments',landingPath:'/payments/review',services:['Account restriction review'],size:'2–10',budget:'Revenue share',name:'Test',company:'Test business',email:'test@example.com',consent:true};
+  const post=body=>fetch(`http://localhost:${port}/api/leads`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  try {
+    assert.equal((await post({...lead,budget:'€1,000–€5,000'})).status,400);
+    assert.equal((await post({...lead,funnel:'ai'})).status,400);
+    assert.equal((await post(lead)).status,201);
+    const saved=JSON.parse((await readFile(join(dir,'leads.ndjson'),'utf8')).trim());
+    assert.equal(saved.funnel,'payments'); assert.equal(saved.landingPath,'/payments/review');assert.equal(saved.budget,'Revenue share');
+    assert.equal((await post(lead)).status,200);
+  } finally {child.kill();await once(child,'exit');await rm(dir,{recursive:true,force:true});}
+});

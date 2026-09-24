@@ -40,7 +40,7 @@
     async booked(data) {
       await config;
       // Only a new, accepted booking for this event counts. Never a lead form, test or reschedule.
-      if (consent !== 'granted' || !initialized || data?.status?.toUpperCase() !== 'ACCEPTED' || data.eventTypeId !== 7193637 || !data.uid || data.paymentRequired) return false;
+      if (consent !== 'granted' || !initialized || data?.status?.toUpperCase() !== 'ACCEPTED' || ![7193637, 7217569].includes(data.eventTypeId) || !data.uid || data.paymentRequired) return false;
       const key = 'maracuya-booked-' + data.uid;
       if (seen.has(key)) return false;
       try { if (sessionStorage.getItem(key)) return false; } catch {}

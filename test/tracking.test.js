@@ -28,6 +28,8 @@ test('measurement requires consent and an accepted booking, and deduplicates cal
   assert.equal(await window.MaracuyaTracking.booked(booking), true);
   assert.equal(await window.MaracuyaTracking.booked(booking), false);
   assert.equal(calls.filter(c => c[2] === 'Schedule').length, 1);
+  assert.equal(await window.MaracuyaTracking.booked({...booking,uid:'payments-booking',eventTypeId:7217569}), true);
+  assert.equal(await window.MaracuyaTracking.booked({...booking,uid:'payments-booking',eventTypeId:7217569}), false);
   nodes.find(n => n.textContent === 'Decline').handlers.click();
   assert.equal(await window.MaracuyaTracking.booked({...booking,uid:'booking-2'}), false);
   assert.ok(calls.some(c => c[0] === 'consent' && c[1] === 'revoke'));

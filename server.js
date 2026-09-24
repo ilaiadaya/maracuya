@@ -9,6 +9,8 @@ const dataDir = process.env.DATA_DIR || join(root, '.data');
 mkdirSync(dataDir, { recursive: true, mode: 0o700 });
 const leadsFile = join(dataDir, 'leads.ndjson');
 const services = ['Customer support', 'Internal process optimization', 'Custom tools & software', 'AI training for my team', 'Other'];
+const paymentServices = ['Stripe checkout setup', 'Subscriptions & billing', 'Fix or migrate payments', 'Account restriction review', 'Other'];
+const paymentModels = ['Upfront project fee', 'Revenue share', 'Help me choose'];
 const sizes = ['Just me', '2–10', '11–50', '51–200', '201–1,000', '1,000+'];
 const budgets = ['€1,000–€5,000', '€5,000–€10,000', '€10,000–€25,000', '€25,000+', 'Help me scope it'];
 const rates = new Map();
@@ -20,6 +22,9 @@ const bookingUrl = (() => {
   return '';
 })();
 const assets = new Map([
+  ['/payments', ['payments.html', 'text/html; charset=utf-8']],
+  ['/payments/review', ['payments-review.html', 'text/html; charset=utf-8']],
+  ['/payments.css', ['payments.css', 'text/css; charset=utf-8']],
   ['/', ['index.html', 'text/html; charset=utf-8']],
   ['/lilac', ['lilac.html', 'text/html; charset=utf-8']],
   ['/midnight', ['midnight.html', 'text/html; charset=utf-8']],
@@ -85,9 +90,13 @@ const server = http.createServer(async (req, res) => {
       try { body = JSON.parse(raw); } catch { return reply(res, 400, { error: 'Invalid submission' }); }
       if (!body || typeof body !== 'object' || Array.isArray(body)) return reply(res, 400, { error: 'Invalid submission' });
       if (body.website) return reply(res, 400, { error: 'Unable to submit this form.' });
+      if (body.funnel && !['ai', 'payments'].includes(body.funnel)) return reply(res, 400, { error: 'Invalid enquiry type' });
+      const funnel = body.funnel === 'payments' ? 'payments' : 'ai';
+      const validServices = funnel === 'payments' ? paymentServices : services;
+      const validBudgets = funnel === 'payments' ? paymentModels : budgets;
       const selected = Array.isArray(body.services) ? [...new Set(body.services)] : [];
       const name = text(body.name, 120), email = text(body.email, 254), company = text(body.company, 160), other = text(body.other, 1500);
-      if (!selected.length || selected.some(s => !services.includes(s)) || !sizes.includes(body.size) || !budgets.includes(body.budget) || !name || !company || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || body.consent !== true || (selected.includes('Other') && !other)) {
+      if (!selected.length || selected.some(s => !validServices.includes(s)) || !sizes.includes(body.size) || !validBudgets.includes(body.budget) || !name || !company || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || body.consent !== true || (selected.includes('Other') && !other)) {
         return reply(res, 400, { error: 'Please complete your needs, company size, budget and contact details.' });
       }
       const submissionId = text(body.submissionId, 80);
@@ -99,7 +108,7 @@ const server = http.createServer(async (req, res) => {
       for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
         if (body.attribution?.[key]) attribution[key] = text(body.attribution[key], 200);
       }
-      const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, notes: text(body.notes, 2000), consent: true, attribution };
+      const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), funnel, landingPath: ['/payments', '/payments/review', '/', '/lilac', '/midnight', '/mint'].includes(body.landingPath) ? body.landingPath : '/', services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, notes: text(body.notes, 2000), consent: true, attribution };
       appendFileSync(leadsFile, JSON.stringify(lead) + '\n', { mode: 0o600, flush: true });
       return reply(res, 201, { ok: true, id: lead.id });
     }
