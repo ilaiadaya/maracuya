@@ -101,3 +101,20 @@ WhatsApp follow-up is deferred until a business number, connected account, respo
 - Poster successfully uploaded to Meta media library as payments-poster.png, 1086 × 1448. Selected in image creative wizard; sources/extensions all off; crop ratios left Original. Text, final preview and publication are NOT complete. Editor repeatedly timed out, including after reload. Reopen the creative wizard, select the uploaded poster, complete the approved copy above, disable unwanted enhancements, verify settings and publish only this ad/ad set. Confirm Scheduled or In review plus the future start, not merely a draft toggle.
 - Native form copy is prepared in this document, but no finished native form or native-form ad was created in Meta yet. Build as Higher intent, link privacy notice, complete-to-book CTA on /payments/book; keep lead vs booking reporting distinct.
 - Current site commit ebfb8f7; production /payments, /payments/review and /payments/book verified. All changes committed; no new production appointment or synthetic Schedule event sent.
+
+## Proposed managed billing offer — 25 September
+
+User direction: extend the offer beyond implementation to customer support, refunds, cancellations and chargeback/dispute handling; make the experience feel plug-and-play. Pricing discussion now favors fixed setup pricing plus optional flat monthly support, without a revenue percentage. This section is proposed copy; existing live pages and uploaded poster still contain the earlier revenue-share positioning. Align those assets before publishing a revised offer.
+
+Suggested headline: You build the business. We handle the billing.
+Suggested body: Payment setup, customer billing support, refunds, cancellations and dispute handling—all in one place. We connect your tools and manage the agreed day-to-day work around your policies.
+Suggested pricing line: One setup fee. One clear monthly fee. No percentage of your revenue.
+Suggested supporting line: A managed service, configured for your business. Scope, support hours and delivery date agreed before we start.
+
+Delivery: reserve the 1–2 business day target for simple, scoped checkout setups once access and requirements are ready. Onboarding a managed support service requires connecting the inbox, agreeing support and refund policies, permissions and escalation ownership; quote its delivery date separately.
+
+Commercial scope: bill the implementation separately from ongoing operations. The earlier proposed €199/month maintenance plan is not a price for unlimited customer-support and dispute work. A managed-service quote should specify channels, coverage hours, included workload and escalation arrangements in advance; service fees do not automatically rise with payment revenue or transaction value. Provider transaction/dispute fees and the merchant's refunds remain separate.
+
+Operating scope: routine refunds and cancellations follow merchant-approved policies and authority limits; exceptions escalate for approval. Dispute work includes case review, evidence preparation, deadline tracking and authorized submissions. Never claim guaranteed wins or automatic reinstatement. The card issuer determines dispute outcomes: https://stripe.com/guides/introduction-to-payment-disputes .
+
+Avoid unqualified claims of zero onboarding, unlimited support or 24/7 coverage. Use “We connect it. We manage it.” rather than implying an already-built universal plug-and-play product.
