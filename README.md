@@ -42,3 +42,9 @@ Required variables: `DATA_DIR=/data`, `LEADS_ADMIN_TOKEN` (secret). Booking: `BO
 Automated backend checks cover required fields, consent, malformed requests, request size, origin, idempotency, restart persistence, private export and rate limiting. Browser checks cover multi-select/Other, back navigation, invalid email, save errors and retries, an actual local submission, the real 15-minute Cal.com embed, and overflow at 320/375/390/768/1024/1440px. Consent gating, revocation, accepted-booking filtering, deduplication, product images and mobile overflow are also verified. No real appointment was created during testing.
 
 Ad copy and destination URL: [AD-COPY.md](AD-COPY.md). Campaign launch state is recorded in AD-COPY.md.
+
+## Landing variations and 3D
+
+The main funnel and `/lilac`, `/midnight`, `/mint` share the same lead capture and Cal.com booking flow. Each uses real product screenshots as portfolio evidence; no client testimonials or ratings have been supplied. The live 3D passion fruit uses locally served Three.js 0.183.2 (MIT licence in `public/vendor/THREE-LICENSE.txt`). Motion can be paused and starts paused when reduced motion is requested. Rendering pauses off-screen and in background tabs. Stylesheets use a versioned URL to avoid stale assets.
+
+Verified all four funnels through the embedded calendar locally, layouts at 320/390/520/768/1440px, motion controls, reduced motion, and the deployed routes at mobile width.

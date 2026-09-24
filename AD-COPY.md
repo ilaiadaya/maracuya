@@ -30,6 +30,10 @@ Bring us the thing you wish existed. Tell us a little about your idea, then book
 
 ## Launch state
 
-Campaign, ad set and video ad are saved as drafts in Meta. Campaign ID: `120250906197970219`; ad set: `120250906197980219`; ad: `120250906197960219`. Publication is waiting for the existing Facebook Page / Instagram identity selection. The user requested an existing Page; no new Page was created. Do not assume delivery until publication is verified. No invented testimonials, customer counts or guaranteed outcomes are used.
+Published on September 24, 2026. The founder ad is **Processing** in Meta (publication confirmed; delivery has not yet been verified). Campaign ID: `120250906197970219`; ad set: `120250906197980219`; ad: `120250906197960219`. Budget verified at €50/day average. Only this campaign, its ad set and its ad were published; the two unrelated Traffic campaigns remain drafts.
 
-The live pixel sent a consented PageView to Meta on September 23. Schedule filtering and deduplication passed isolated tests without sending fake bookings to Meta. Meta may still show no Schedule activity until a real consented booking is completed.
+The user selected the existing Clipwave Page (`1094540157084551`, public profile `61590233503742`). Instagram uses the Facebook Page identity. A rename to Maracuya Labs is prepared in Facebook, but submission requires the user’s password directly in Facebook. Facebook’s dialog says review can take up to three days. No new Page was created.
+
+Meta Events Manager now shows **PageView — Active**, seven events, with maracuyalabs.com as its website. The consented PageView request and Meta pixel configuration both returned HTTP 200. Schedule filtering and deduplication passed isolated tests. A user-requested real Cal booking on September 23 confirmed successfully and delivered a Google Meet link and calendar attachments to the host’s Gmail. That test declined measurement consent, so it intentionally did not send a Schedule event to Meta. A consented completed booking is required before that event appears in the activity history.
+
+Landing-page variations are live at `/lilac`, `/midnight` and `/mint`; the ad currently directs to `/`. These have not been added as extra ads or assigned extra budgets. Credibility sections show actual studio products; no client reviews, star ratings or client logos have been supplied.
