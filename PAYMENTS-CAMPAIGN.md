@@ -66,3 +66,27 @@ Continue with: “We can help organize the facts, prepare a response and assess 
 Requested launch: 25 September 2026, 20:00 Europe/Berlin. Share existing €50/day total unless user explicitly elects additional spend. Meta account currently caps spend at €40/day (platform setting). Scheduled/published status must be verified in Meta before reporting launch complete.
 
 Mobile tested at 320, 390, 520, 768 and 1440px; no horizontal overflow. Full needs → team → commercial model → contact → dedicated calendar flow verified locally. Payment leads persist with funnel and landingPath attribution; cross-funnel service/model mismatches rejected. Consent-gated Schedule event supports both approved Cal event IDs and deduplicates callbacks. No synthetic production conversion or extra test appointment was sent.
+
+## Meta native-form test
+
+Use a separate Instant Forms ad set so native leads and website Schedule conversions remain distinguishable. Prepare as a draft while the website-booking poster is launched. Same shared campaign budget; no additional €50/day allocation implied.
+
+Form name: Maracuya Labs | Payments intro | Sep 2026
+Form type: Higher intent (review step)
+Intro headline: Let’s get your payments working
+Intro body: Tell us what you need help with. We’ll review your enquiry and discuss a practical next step on a free 15-minute call.
+
+Questions:
+1. Where could you use a hand? Stripe checkout setup / Subscriptions & billing / Fix or migrate payments / Account restriction review / Something else.
+2. Company size: Just me / 2–10 / 11–50 / 51–200 / 201–1,000 / 1,000+.
+3. Preferred way to work together: Upfront project fee / Revenue share / Help me choose.
+4. Contact: Full name, work email, company name. No phone required.
+
+Privacy: https://maracuyalabs.com/privacy. Explain that enquiry details are used to contact them about their request. No marketing-newsletter opt-in implied.
+Completion headline: Choose a time to talk
+Completion text: Thanks—your enquiry is in. Book a free 15-minute introduction with Ilai using the button below. A submitted form is not a confirmed appointment.
+CTA: Book now → https://cal.com/ilai-3co4kt/maracuya-payments
+
+Native form completion is a lead, not a Schedule conversion. Never fire a completed-booking event for form completion alone. Direct external Cal booking will not trigger our website’s consent-gated pixel callback; evaluate bookings via Cal records unless a verified server-side integration is added.
+
+WhatsApp follow-up is deferred until a business number, connected account, response owner and consent wording are established. No invented automated responses or unconnected WhatsApp button.
