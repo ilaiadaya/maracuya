@@ -85,8 +85,8 @@ Questions:
 Privacy: https://maracuyalabs.com/privacy. Explain that enquiry details are used to contact them about their request. No marketing-newsletter opt-in implied.
 Completion headline: Choose a time to talk
 Completion text: Thanks—your enquiry is in. Book a free 15-minute introduction with Ilai using the button below. A submitted form is not a confirmed appointment.
-CTA: Book now → https://cal.com/ilai-3co4kt/maracuya-payments
+CTA: Book now → https://maracuyalabs.com/payments/book?utm_source=meta&utm_medium=instant_form&utm_campaign=payments_implementation
 
-Native form completion is a lead, not a Schedule conversion. Never fire a completed-booking event for form completion alone. Direct external Cal booking will not trigger our website’s consent-gated pixel callback; evaluate bookings via Cal records unless a verified server-side integration is added.
+Native form completion is a lead, not a Schedule conversion. Never fire a completed-booking event for form completion alone. The completion button opens /payments/book, a calendar-only page that preserves consent-gated Schedule measurement without repeating the questionnaire.
 
 WhatsApp follow-up is deferred until a business number, connected account, response owner and consent wording are established. No invented automated responses or unconnected WhatsApp button.

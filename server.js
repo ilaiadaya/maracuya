@@ -22,6 +22,8 @@ const bookingUrl = (() => {
   return '';
 })();
 const assets = new Map([
+  ['/payments/book', ['payments-book.html', 'text/html; charset=utf-8']],
+  ['/payments-book.js', ['payments-book.js', 'text/javascript; charset=utf-8']],
   ['/payments', ['payments.html', 'text/html; charset=utf-8']],
   ['/payments/review', ['payments-review.html', 'text/html; charset=utf-8']],
   ['/payments.css', ['payments.css', 'text/css; charset=utf-8']],
