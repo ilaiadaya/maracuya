@@ -21,6 +21,13 @@ const bookingUrl = (() => {
 })();
 const assets = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
+  ['/lilac', ['lilac.html', 'text/html; charset=utf-8']],
+  ['/midnight', ['midnight.html', 'text/html; charset=utf-8']],
+  ['/mint', ['mint.html', 'text/html; charset=utf-8']],
+  ['/fruit.js', ['fruit.js', 'text/javascript; charset=utf-8']],
+  ['/vendor/three.module.min.js', ['vendor/three.module.min.js', 'text/javascript; charset=utf-8']],
+  ['/vendor/three.core.min.js', ['vendor/three.core.min.js', 'text/javascript; charset=utf-8']],
+  ['/vendor/THREE-LICENSE.txt', ['vendor/THREE-LICENSE.txt', 'text/plain; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
   ['/booking.js', ['booking.js', 'text/javascript; charset=utf-8']],

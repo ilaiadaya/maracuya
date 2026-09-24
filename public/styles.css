@@ -45,3 +45,43 @@
  .choice-icon{width:22px;font-size:22px;flex-shrink:0}
 }
 @media(prefers-reduced-motion:reduce){.hero .orange-period{animation:none}}
+/* A small, real 3D object gives the studio its namesake. */
+.fruit-scene{margin:8px 0 5px;max-width:440px}
+.fruit-stage{width:100%;height:270px;position:relative;background:radial-gradient(ellipse at 50% 75%,#e6b9b323,transparent 67%);border-radius:50%;isolation:isolate}
+.fruit-stage:after{content:'';position:absolute;bottom:20px;left:25%;width:52%;height:16px;background:#52214423;filter:blur(14px);border-radius:50%;z-index:-1}
+.fruit-stage canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+.fruit-no-webgl{display:none}.fruit-fallback .fruit-no-webgl{display:grid;place-items:center;height:100%;font-size:150px;color:#883e77}
+.fruit-caption{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:10px;color:var(--muted)}
+.fruit-caption button{border:0;background:none;color:inherit;text-decoration:underline;min-height:44px;padding:8px;font-size:10px;white-space:nowrap}
+.hero-copy{padding-top:15px}.hero h1{margin:24px 0 22px}.hero-detail{margin-bottom:0}.hero-copy>.text-link{margin-top:3px}
+.proof{border-top:1px solid var(--line);padding-top:45px;padding-bottom:45px}
+.proof-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:26px}
+.proof-heading .eyebrow{margin-top:0}.proof h2{font-size:32px;font-weight:400;letter-spacing:-1px;line-height:1.2;margin:10px 0 0}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proof-card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#ffffff66;transition:transform .2s}
+.proof-card:hover{transform:translateY(-4px)}
+.proof-card img{width:100%;height:175px;object-fit:cover;object-position:top;display:block;border-bottom:1px solid var(--line)}
+.proof-card>div{padding:17px}.proof-card strong{display:flex;align-items:center;justify-content:space-between;font-size:17px;font-weight:500}.proof-card div>span{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+.proof-promise{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--muted);padding-top:28px}
+.theme-lilac{--paper:#f0edfb;--ink:#29213c;--muted:#6c647b;--line:#d9d3e8;--orange:#6950c9;--green:#594784;--soft:#f1edff}
+.theme-mint{--paper:#edf5f3;--ink:#183735;--muted:#587371;--line:#cee0dc;--orange:#216b64;--green:#285d55;--soft:#e8f6f2}
+.theme-midnight{--paper:#111d2a;--ink:#edf3f8;--muted:#b2c0ce;--line:#344251;--orange:#bdebaf;--green:#385a42;--soft:#213344}
+.theme-midnight .brand-light{color:#b6c2cf}.theme-midnight .nav-cta{border-color:#66717e}.theme-midnight .nav-cta:hover{background:#263748}
+.theme-midnight .funnel-card{--ink:#262c28;--muted:#70746d;color:var(--ink);background:#f9fcfa;border-color:#455551}
+.theme-midnight .primary{color:#172f22}.theme-midnight .hero-copy>.text-link{color:var(--ink)}
+.theme-midnight .proof-card{background:#1b2b3b}.theme-midnight .proof-heading .text-link,.theme-midnight .bottom-note .text-link{color:var(--ink)}
+.theme-midnight .cookie-panel{color:#262c28}.theme-midnight footer .brand{color:var(--ink)}
+.theme-midnight .fruit-stage{background:radial-gradient(ellipse at 50% 55%,#59639050,transparent 68%)}
+.theme-lilac .fruit-stage{background:radial-gradient(ellipse at center,#ccb7ef65,transparent 68%)}
+.theme-mint .fruit-stage{background:radial-gradient(ellipse at center,#b7dbc965,transparent 68%)}
+.landing-variant .hero h1{font-size:clamp(42px,4.6vw,64px);letter-spacing:-2.8px}
+@media(max-width:760px){
+ .hero-copy{padding-top:0}.hero h1{margin:15px 0 17px}
+ .fruit-scene{max-width:390px;margin:0 auto}.fruit-stage{height:220px}
+ .fruit-caption{font-size:10px}.fruit-caption button{font-size:11px}
+ .proof{padding-top:30px;padding-bottom:30px}.proof-heading{align-items:start;flex-direction:column;gap:15px}.proof h2{font-size:29px}
+ .proof-grid{grid-template-columns:1fr;gap:15px}.proof-card{display:grid;grid-template-columns:38% 1fr;align-items:center}
+ .proof-card img{height:135px;border:0;border-right:1px solid var(--line)}.proof-card>div{padding:14px}.proof-card div>span{font-size:12px}
+ .proof-promise{flex-direction:column;gap:10px;font-size:12px}.landing-variant .hero h1{font-size:clamp(40px,8vw,54px);letter-spacing:-2px}
+}
+@media(max-width:360px){.site-header nav{gap:9px}.site-header nav>a:nth-child(2){font-size:12px}.nav-cta{padding:8px 12px}.proof-card strong{font-size:16px}}
