@@ -21,6 +21,20 @@ const bookingUrl = (() => {
   } catch {}
   return '';
 })();
+// PostHog product analytics: anonymous funnel events only, no names or emails.
+const posthogKey = /^phc_[A-Za-z0-9]{20,}$/.test(process.env.POSTHOG_KEY || '') ? process.env.POSTHOG_KEY : '';
+const posthogHost = (() => {
+  try { const u = new URL(process.env.POSTHOG_HOST || 'https://eu.i.posthog.com'); if (u.protocol === 'https:') return u.origin; } catch {}
+  return 'https://eu.i.posthog.com';
+})();
+function analytics(event, distinctId, properties) {
+  if (!posthogKey) return;
+  fetch(posthogHost + '/i/v0/e/', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ api_key: posthogKey, event, distinct_id: distinctId, timestamp: new Date().toISOString(), properties: { ...properties, $lib: 'maracuya-server' } }),
+    signal: AbortSignal.timeout(5000),
+  }).catch(() => {});
+}
 const assets = new Map([
   ['/payments/book', ['payments-book.html', 'text/html; charset=utf-8']],
   ['/payments-book.js', ['payments-book.js', 'text/javascript; charset=utf-8']],
@@ -47,7 +61,7 @@ const commonHeaders = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'X-Frame-Options': 'DENY',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' https://app.cal.com https://connect.facebook.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://app.cal.com; frame-src https://app.cal.com https://cal.com https://calendly.com https://calendar.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' https://app.cal.com https://connect.facebook.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://app.cal.com" + (posthogKey ? ' ' + posthogHost : '') + "; frame-src https://app.cal.com https://cal.com https://calendly.com https://calendar.google.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
 };
 function reply(res, status, data) {
   res.writeHead(status, { ...commonHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -63,7 +77,7 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (req.method === 'GET' && url.pathname === '/health') return reply(res, 200, { ok: true });
-    if (req.method === 'GET' && url.pathname === '/api/config') return reply(res, 200, { bookingUrl, metaPixelId: /^\d+$/.test(process.env.META_PIXEL_ID || '') ? process.env.META_PIXEL_ID : '' });
+    if (req.method === 'GET' && url.pathname === '/api/config') return reply(res, 200, { bookingUrl, metaPixelId: /^\d+$/.test(process.env.META_PIXEL_ID || '') ? process.env.META_PIXEL_ID : '', posthogKey, posthogHost: posthogKey ? posthogHost : '' });
     if (req.method === 'GET' && url.pathname === '/api/leads') {
       if (!authorized(req)) return reply(res, 401, { error: 'Unauthorized' });
       res.writeHead(200, { ...commonHeaders, 'Content-Type': 'application/x-ndjson', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="maracuya-enquiries.ndjson"' });
@@ -125,6 +139,8 @@ const server = http.createServer(async (req, res) => {
       }
       const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), funnel, landingPath: ['/payments', '/payments/review', '/', '/lilac', '/midnight', '/mint'].includes(body.landingPath) ? body.landingPath : '/', services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, companyWebsite, notes: text(body.notes, 2000), attribution };
       appendFileSync(leadsFile, JSON.stringify(lead) + '\n', { mode: 0o600, flush: true });
+      const distinctId = /^[a-zA-Z0-9-]{16,80}$/.test(body.distinctId || '') ? body.distinctId : lead.id;
+      analytics('enquiry_saved', distinctId, { lead_id: lead.id, funnel, landing_path: lead.landingPath, services: selected, size: body.size, budget: body.budget, has_website: Boolean(companyWebsite), has_notes: Boolean(lead.notes), ...attribution });
       return reply(res, 201, { ok: true, id: lead.id });
     }
     if (['GET', 'HEAD'].includes(req.method) && /^\/work-images\/[a-z0-9-]+\.webp$/.test(url.pathname) && existsSync(join(root, 'public', url.pathname))) {

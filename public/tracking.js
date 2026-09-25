@@ -2,7 +2,33 @@
   const storageKey = 'maracuya-marketing-consent';
   let consent = null, pixelId = '', initialized = false;
   try { consent = localStorage.getItem(storageKey); } catch {}
-  const config = fetch('/api/config').then(r => r.json()).then(c => { pixelId = c.metaPixelId || ''; if (consent === 'granted') initialize(); });
+  // PostHog funnel analytics: first-party, anonymous id, no names/emails. Sent directly to the ingestion endpoint (no third-party script).
+  const idKey = 'maracuya-analytics-id';
+  let distinctId = '';
+  try { distinctId = localStorage.getItem(idKey) || ''; } catch {}
+  if (!distinctId) {
+    distinctId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'anon-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+    try { localStorage.setItem(idKey, distinctId); } catch {}
+  }
+  let posthog = null;
+  const search = new URLSearchParams(location.search || '');
+  const utm = Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].filter(k => search.has(k)).map(k => [k, search.get(k).slice(0, 200)]));
+  function capture(event, properties = {}) {
+    if (!posthog) return;
+    const body = JSON.stringify({ api_key: posthog.key, event, distinct_id: distinctId, timestamp: new Date().toISOString(), properties: { $current_url: location.href, $pathname: location.pathname || '/', $referrer: (typeof document !== 'undefined' && document.referrer) || '', $lib: 'maracuya-web', funnel: (document.body && document.body.dataset && document.body.dataset.funnel) || 'ai', ...utm, ...properties } });
+    try { fetch(posthog.host + '/i/v0/e/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {}); } catch {}
+  }
+  const queue = [];
+  window.MaracuyaAnalytics = { capture: (event, properties) => posthog ? capture(event, properties) : queue.push([event, properties]), distinctId };
+  const config = fetch('/api/config').then(r => r.json()).then(c => {
+    pixelId = c.metaPixelId || '';
+    if (c.posthogKey && c.posthogHost) {
+      posthog = { key: c.posthogKey, host: c.posthogHost };
+      capture('$pageview');
+      while (queue.length) capture(...queue.shift());
+    }
+    if (consent === 'granted') initialize();
+  });
   function initialize() {
     if (initialized || consent !== 'granted' || !/^\d+$/.test(pixelId)) return;
     const fbq = window.fbq = function () { fbq.callMethod ? fbq.callMethod.apply(fbq, arguments) : fbq.queue.push(arguments); };

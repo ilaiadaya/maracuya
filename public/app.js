@@ -60,7 +60,11 @@ form.addEventListener('submit', async event => {
   }
   if (step === 1 && !data.get('size')) return showError('Choose your company size to continue.', form.querySelector('[name=size]'));
   if (step === 2 && !data.get('budget')) return showError(paymentFunnel ? 'Choose how you’d like to work together.' : 'Choose a budget, or select “Help me scope it.”', form.querySelector('[name=budget]'));
-  if (step < 3) return showStep(step + 1);
+  if (step < 3) {
+    window.MaracuyaAnalytics?.capture(step === 0 ? 'funnel_started' : 'funnel_step_completed', { step: step + 1, services: step === 0 ? data.getAll('services') : undefined, size: step === 1 ? data.get('size') : undefined, budget: step === 2 ? data.get('budget') : undefined });
+    return showStep(step + 1);
+  }
+  window.MaracuyaAnalytics?.capture('funnel_step_completed', { step: 4 });
   for (const input of panels[3].querySelectorAll('[required]')) {
     if (!input.checkValidity() || (input.type !== 'checkbox' && !input.value.trim())) {
       const message = input.id === 'email' ? 'Enter a valid email address.' : `Please enter your ${input.id === 'name' ? 'name' : 'company name'}.`;
@@ -83,11 +87,12 @@ form.addEventListener('submit', async event => {
   try {
     const response = await fetch('/api/leads', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ funnel: paymentFunnel ? 'payments' : 'ai', landingPath: location.pathname, submissionId, services: data.getAll('services'), other: data.get('other'), size: data.get('size'), budget: data.get('budget'), name: data.get('name'), email: data.get('email'), company: data.get('company'), companyWebsite, notes: data.get('notes'), website: data.get('website'), attribution }),
+      body: JSON.stringify({ funnel: paymentFunnel ? 'payments' : 'ai', landingPath: location.pathname, submissionId, services: data.getAll('services'), other: data.get('other'), size: data.get('size'), budget: data.get('budget'), name: data.get('name'), email: data.get('email'), company: data.get('company'), companyWebsite, notes: data.get('notes'), website: data.get('website'), attribution, distinctId: window.MaracuyaAnalytics?.distinctId }),
       signal: AbortSignal.timeout(20000),
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || 'We couldn’t save your enquiry. Please try again.');
+    window.MaracuyaAnalytics?.capture('enquiry_submitted', { services: data.getAll('services'), size: data.get('size'), budget: data.get('budget'), has_website: Boolean(companyWebsite) });
     await configReady;
     form.hidden = true;
     document.querySelector('#booking').hidden = false;
@@ -125,6 +130,7 @@ form.addEventListener('submit', async event => {
     title.focus({ preventScroll: true });
     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
+    window.MaracuyaAnalytics?.capture('enquiry_failed', { reason: err.name === 'TimeoutError' ? 'timeout' : 'error' });
     showError(err.name === 'TimeoutError' ? 'The connection took too long. Please try again; your enquiry won’t be duplicated.' : err.message || 'We couldn’t save your enquiry. Please try again.');
   } finally {
     busy = false;
