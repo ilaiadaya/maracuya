@@ -63,9 +63,19 @@ form.addEventListener('submit', async event => {
   if (step < 3) return showStep(step + 1);
   for (const input of panels[3].querySelectorAll('[required]')) {
     if (!input.checkValidity() || (input.type !== 'checkbox' && !input.value.trim())) {
-      const message = input.id === 'consent' ? 'Please confirm we can contact you about your enquiry.' : input.id === 'email' ? 'Enter a valid email address.' : `Please enter your ${input.id === 'name' ? 'name' : 'company name'}.`;
+      const message = input.id === 'email' ? 'Enter a valid email address.' : `Please enter your ${input.id === 'name' ? 'name' : 'company name'}.`;
       return showError(message, input);
     }
+  }
+  const websiteInput = form.elements.companyWebsite;
+  let companyWebsite = websiteInput.value.trim();
+  if (companyWebsite) {
+    try {
+      if (companyWebsite.length > 2048 || /\s/.test(companyWebsite)) throw new Error();
+      const url = new URL(/^[a-z][a-z\d+.-]*:/i.test(companyWebsite) ? companyWebsite : 'https://' + companyWebsite);
+      if (!['https:', 'http:'].includes(url.protocol) || !url.hostname.includes('.') || url.username || url.password) throw new Error();
+      companyWebsite = url.href;
+    } catch { return showError('Enter a valid company website, such as yourcompany.com, or leave it blank.', websiteInput); }
   }
   busy = true;
   next.disabled = back.disabled = true;
@@ -73,7 +83,7 @@ form.addEventListener('submit', async event => {
   try {
     const response = await fetch('/api/leads', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ funnel: paymentFunnel ? 'payments' : 'ai', landingPath: location.pathname, submissionId, services: data.getAll('services'), other: data.get('other'), size: data.get('size'), budget: data.get('budget'), name: data.get('name'), email: data.get('email'), company: data.get('company'), notes: data.get('notes'), website: data.get('website'), consent: data.get('consent') === 'on', attribution }),
+      body: JSON.stringify({ funnel: paymentFunnel ? 'payments' : 'ai', landingPath: location.pathname, submissionId, services: data.getAll('services'), other: data.get('other'), size: data.get('size'), budget: data.get('budget'), name: data.get('name'), email: data.get('email'), company: data.get('company'), companyWebsite, notes: data.get('notes'), website: data.get('website'), attribution }),
       signal: AbortSignal.timeout(20000),
     });
     const result = await response.json();
@@ -92,7 +102,7 @@ form.addEventListener('submit', async event => {
       const link = document.querySelector('#booking-link');
       link.href = url.href;
       link.hidden = false;
-      if (url.hostname === 'cal.com' && url.pathname === '/ilai-3co4kt/maracuyalabs') {
+      if (url.hostname === 'cal.com' && ['/ilai-3co4kt/maracuyalabs', '/ilai-3co4kt/maracuya-payments'].includes(url.pathname)) {
         window.MaracuyaCalendar.mount({ name: data.get('name'), email: data.get('email') });
         document.querySelector('.hero').classList.add('booking-open');
         link.firstChild.textContent = 'Open booking in a new tab ';

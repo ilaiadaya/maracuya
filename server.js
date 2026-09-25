@@ -98,8 +98,21 @@ const server = http.createServer(async (req, res) => {
       const validBudgets = funnel === 'payments' ? paymentModels : budgets;
       const selected = Array.isArray(body.services) ? [...new Set(body.services)] : [];
       const name = text(body.name, 120), email = text(body.email, 254), company = text(body.company, 160), other = text(body.other, 1500);
-      if (!selected.length || selected.some(s => !validServices.includes(s)) || !sizes.includes(body.size) || !validBudgets.includes(body.budget) || !name || !company || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || body.consent !== true || (selected.includes('Other') && !other)) {
+      if (!selected.length || selected.some(s => !validServices.includes(s)) || !sizes.includes(body.size) || !validBudgets.includes(body.budget) || !name || !company || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || (selected.includes('Other') && !other)) {
         return reply(res, 400, { error: 'Please complete your needs, company size, budget and contact details.' });
+      }
+      let companyWebsite = '';
+      if (body.companyWebsite != null && body.companyWebsite !== '') {
+        try {
+          if (typeof body.companyWebsite !== 'string' || body.companyWebsite.length > 2048) throw new Error();
+          const value = body.companyWebsite.trim();
+          if (value) {
+            if (/\s/.test(value)) throw new Error();
+            const site = new URL(/^[a-z][a-z\d+.-]*:/i.test(value) ? value : 'https://' + value);
+            if (!['https:', 'http:'].includes(site.protocol) || !site.hostname.includes('.') || site.username || site.password) throw new Error();
+            companyWebsite = site.href;
+          }
+        } catch { return reply(res, 400, { error: 'Enter a valid company website or leave it blank.' }); }
       }
       const submissionId = text(body.submissionId, 80);
       if (!/^[a-zA-Z0-9-]{16,80}$/.test(submissionId)) return reply(res, 400, { error: 'Invalid submission ID' });
@@ -110,7 +123,7 @@ const server = http.createServer(async (req, res) => {
       for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
         if (body.attribution?.[key]) attribution[key] = text(body.attribution[key], 200);
       }
-      const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), funnel, landingPath: ['/payments', '/payments/review', '/', '/lilac', '/midnight', '/mint'].includes(body.landingPath) ? body.landingPath : '/', services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, notes: text(body.notes, 2000), consent: true, attribution };
+      const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), funnel, landingPath: ['/payments', '/payments/review', '/', '/lilac', '/midnight', '/mint'].includes(body.landingPath) ? body.landingPath : '/', services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, companyWebsite, notes: text(body.notes, 2000), attribution };
       appendFileSync(leadsFile, JSON.stringify(lead) + '\n', { mode: 0o600, flush: true });
       return reply(res, 201, { ok: true, id: lead.id });
     }
