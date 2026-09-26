@@ -26,6 +26,7 @@ test('lead capture validates, deduplicates, persists across restart, and protect
     assert.equal((await (await fetch(`${base}/api/config`)).json()).bookingUrl, 'https://cal.com/test/15min');
     assert.equal((await post({ ...lead, services: [] })).status, 400);
     assert.equal((await post({ ...lead, services: ['Other'] })).status, 400);
+    assert.equal((await post({ ...lead, services: ['Managed support'] })).status, 400);
     assert.equal((await post({ ...lead, website: 'bot-filled-field' })).status, 400);
     assert.equal((await post({ ...lead, email: 'bad' })).status, 400);
     assert.equal((await post(null)).status, 400);

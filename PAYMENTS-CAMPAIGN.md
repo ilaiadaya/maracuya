@@ -118,3 +118,6 @@ Commercial scope: bill the implementation separately from ongoing operations. Th
 Operating scope: routine refunds and cancellations follow merchant-approved policies and authority limits; exceptions escalate for approval. Dispute work includes case review, evidence preparation, deadline tracking and authorized submissions. Never claim guaranteed wins or automatic reinstatement. The card issuer determines dispute outcomes: https://stripe.com/guides/introduction-to-payment-disputes .
 
 Avoid unqualified claims of zero onboarding, unlimited support or 24/7 coverage. Use “We connect it. We manage it.” rather than implying an already-built universal plug-and-play product.
+
+## Correction 26 Sep
+Ad account is 286548465348858. Dataset/Pixel ID is 1705221900551937 (do not confuse the two). Campaign 120250906197970219 objective = Leads. Ad sets: "Website bookings | Europe + US + Canada" (Founder video ad, 131 link clicks, 0 leads) and "Payments | Europe + US + Canada | 25 Sep 20:00" (Payments poster ad, image still NOT attached). Instant form for the AI ad NOT yet built.

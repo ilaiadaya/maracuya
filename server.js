@@ -8,7 +8,7 @@ const root = dirname(fileURLToPath(import.meta.url));
 const dataDir = process.env.DATA_DIR || join(root, '.data');
 mkdirSync(dataDir, { recursive: true, mode: 0o700 });
 const leadsFile = join(dataDir, 'leads.ndjson');
-const services = ['Customer support', 'Internal process optimization', 'Custom tools & software', 'AI training for my team', 'Other'];
+const services = ['Fully managed support', 'Customer support', 'Internal process optimization', 'Custom tools & software', 'AI training for my team', 'Other'];
 const paymentServices = ['Stripe checkout setup', 'Subscriptions & billing', 'Fix or migrate payments', 'Account restriction review', 'Other'];
 const paymentModels = ['Upfront project fee', 'Revenue share', 'Help me choose'];
 const sizes = ['Just me', '2–10', '11–50', '51–200', '201–1,000', '1,000+'];
