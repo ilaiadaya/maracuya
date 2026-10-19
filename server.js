@@ -56,6 +56,8 @@ const assets = new Map([
   ['/work', ['work.html', 'text/html; charset=utf-8']],
   ['/favicon.svg', ['favicon.svg', 'image/svg+xml']],
   ['/privacy', ['privacy.html', 'text/html; charset=utf-8']],
+  // Google Search Console ownership proof for the Play Console organisation website check. Keep it.
+  ['/google92e1ecf55bcb90db.html', ['google92e1ecf55bcb90db.html', 'text/html; charset=utf-8']],
 ]);
 const commonHeaders = {
   'X-Content-Type-Options': 'nosniff',
