@@ -35,19 +35,14 @@ function analytics(event, distinctId, properties) {
     signal: AbortSignal.timeout(5000),
   }).catch(() => {});
 }
-// Minimal home: with MINIMAL_HOME=1 the apex (maracuyalabs.com / www) shows only the fruit and the contact address,
-// and every other page moves to FULL_SITE_HOST (default ai.maracuyalabs.com), which serves the full site as before.
-const fullSiteHost = process.env.FULL_SITE_HOST || 'ai.maracuyalabs.com';
-const minimalHome = process.env.MINIMAL_HOME === '1';
-const apexHosts = new Set(['maracuyalabs.com', 'www.maracuyalabs.com']);
-const homeAssets = new Set(['/', '/fruit.js', '/vendor/three.module.min.js', '/vendor/three.core.min.js', '/vendor/THREE-LICENSE.txt', '/styles.css', '/favicon.svg', '/health', '/robots.txt']);
 const assets = new Map([
   ['/payments/book', ['payments-book.html', 'text/html; charset=utf-8']],
   ['/payments-book.js', ['payments-book.js', 'text/javascript; charset=utf-8']],
   ['/payments', ['payments.html', 'text/html; charset=utf-8']],
   ['/payments/review', ['payments-review.html', 'text/html; charset=utf-8']],
   ['/payments.css', ['payments.css', 'text/css; charset=utf-8']],
-  ['/', ['index.html', 'text/html; charset=utf-8']],
+  ['/', ['home.html', 'text/html; charset=utf-8']],
+  ['/book', ['index.html', 'text/html; charset=utf-8']],
   ['/lilac', ['lilac.html', 'text/html; charset=utf-8']],
   ['/midnight', ['midnight.html', 'text/html; charset=utf-8']],
   ['/mint', ['mint.html', 'text/html; charset=utf-8']],
@@ -85,17 +80,6 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (req.method === 'GET' && url.pathname === '/health') return reply(res, 200, { ok: true });
-    const reqHost = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(':')[0].toLowerCase();
-    if (minimalHome && apexHosts.has(reqHost)) {
-      if (['GET', 'HEAD'].includes(req.method) && url.pathname === '/') {
-        res.writeHead(200, { ...commonHeaders, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
-        return res.end(req.method === 'HEAD' ? undefined : readFileSync(join(root, 'public', 'home.html')));
-      }
-      if (!homeAssets.has(url.pathname)) {
-        res.writeHead(req.method === 'GET' || req.method === 'HEAD' ? 301 : 308, { ...commonHeaders, Location: 'https://' + fullSiteHost + url.pathname + url.search });
-        return res.end();
-      }
-    }
     if (req.method === 'GET' && url.pathname === '/api/config') return reply(res, 200, { bookingUrl, metaPixelId: /^\d+$/.test(process.env.META_PIXEL_ID || '') ? process.env.META_PIXEL_ID : '', posthogKey, posthogHost: posthogKey ? posthogHost : '' });
     if (req.method === 'GET' && url.pathname === '/api/leads') {
       if (!authorized(req)) return reply(res, 401, { error: 'Unauthorized' });
@@ -156,7 +140,7 @@ const server = http.createServer(async (req, res) => {
       for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
         if (body.attribution?.[key]) attribution[key] = text(body.attribution[key], 200);
       }
-      const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), funnel, landingPath: ['/payments', '/payments/review', '/', '/lilac', '/midnight', '/mint'].includes(body.landingPath) ? body.landingPath : '/', services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, companyWebsite, notes: text(body.notes, 2000), attribution };
+      const lead = { id: randomUUID(), submissionId, createdAt: new Date().toISOString(), funnel, landingPath: ['/payments', '/payments/review', '/', '/book', '/lilac', '/midnight', '/mint'].includes(body.landingPath) ? body.landingPath : '/', services: selected, other: selected.includes('Other') ? other : '', size: body.size, budget: body.budget, name, email, company, companyWebsite, notes: text(body.notes, 2000), attribution };
       appendFileSync(leadsFile, JSON.stringify(lead) + '\n', { mode: 0o600, flush: true });
       const distinctId = /^[a-zA-Z0-9-]{16,80}$/.test(body.distinctId || '') ? body.distinctId : lead.id;
       analytics('enquiry_saved', distinctId, { lead_id: lead.id, funnel, landing_path: lead.landingPath, services: selected, size: body.size, budget: body.budget, has_website: Boolean(companyWebsite), has_notes: Boolean(lead.notes), ...attribution });
