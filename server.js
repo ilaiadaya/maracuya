@@ -47,6 +47,7 @@ const assets = new Map([
   ['/midnight', ['midnight.html', 'text/html; charset=utf-8']],
   ['/mint', ['mint.html', 'text/html; charset=utf-8']],
   ['/fruit.js', ['fruit.js', 'text/javascript; charset=utf-8']],
+  ['/glow.js', ['glow.js', 'text/javascript; charset=utf-8']],
   ['/vendor/three.module.min.js', ['vendor/three.module.min.js', 'text/javascript; charset=utf-8']],
   ['/vendor/three.core.min.js', ['vendor/three.core.min.js', 'text/javascript; charset=utf-8']],
   ['/vendor/THREE-LICENSE.txt', ['vendor/THREE-LICENSE.txt', 'text/plain; charset=utf-8']],

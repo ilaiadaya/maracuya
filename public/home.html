@@ -14,10 +14,14 @@
     .solo .fruit-stage{height:min(380px,70vw)}
     .solo .mail{font-size:15px;letter-spacing:.01em;color:#3a3043;text-decoration:none}
     .solo .mail:hover{text-decoration:underline}
+    .glow{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+    .solo .fruit-scene,.solo .mail{position:relative;z-index:1}
+    .solo .fruit-stage{background:none}
     .solo .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
     .solo .sr:focus{position:static;width:auto;height:auto;clip:auto}
   </style>
   <script type="module" src="/fruit.js?v=2"></script>
+  <script src="/glow.js" defer></script>
 </head>
 <body class="solo">
   <h1 class="sr">Maracuya Labs</h1>
