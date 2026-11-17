@@ -151,6 +151,22 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { ...commonHeaders, 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=86400' });
       return res.end(req.method === 'HEAD' ? undefined : readFileSync(join(root, 'public', url.pathname)));
     }
+    // Games: support + privacy pages (Play/App Store listings link here). public/games/<slug>/{index,privacy}.html
+    const game = ['GET', 'HEAD'].includes(req.method) && url.pathname.match(/^\/games(?:\/([a-z0-9-]+))?(\/|\/privacy(?:\.html)?|\/style\.css)?$/);
+    if (game) {
+      const [, slug, rest = ''] = game;
+      if (!slug && rest === '/style.css') {
+        res.writeHead(200, { ...commonHeaders, 'Content-Type': 'text/css; charset=utf-8', 'Cache-Control': 'no-cache' });
+        return res.end(req.method === 'HEAD' ? undefined : readFileSync(join(root, 'public', 'games', 'style.css')));
+      }
+      if (slug && rest === '/style.css') { res.writeHead(301, { Location: '/games/style.css' }); return res.end(); }
+      if (rest === '') { res.writeHead(301, { Location: url.pathname + '/' }); return res.end(); }
+      const file = join('games', slug || '', rest === '/' ? 'index.html' : 'privacy.html');
+      if (existsSync(join(root, 'public', file))) {
+        res.writeHead(200, { ...commonHeaders, 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
+        return res.end(req.method === 'HEAD' ? undefined : readFileSync(join(root, 'public', file)));
+      }
+    }
     if (['GET', 'HEAD'].includes(req.method) && assets.has(url.pathname)) {
       const [file, type] = assets.get(url.pathname);
       res.writeHead(200, { ...commonHeaders, 'Content-Type': type, 'Cache-Control': 'no-cache' });
